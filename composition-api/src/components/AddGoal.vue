@@ -12,9 +12,37 @@
 </template>
 
 <script>
+import {  ref, watch } from "vue";
 export default {
   emits: ["add-goal"],
-  data() {
+
+  setup(_,context) {
+    const enteredText = ref("");
+    let invalidInput = ref(false);
+
+    watch(invalidInput, (newvalue) => {
+      if (newvalue) {
+        console.log("Analytics: Invalid Input");
+      }
+    });
+
+    function addGoal() {
+      invalidInput.value = false;
+      if (enteredText.value === "") {
+        invalidInput.value = true;
+        return;
+      }
+      context.emit("add-goal", enteredText.value);
+      enteredText.value = "";
+    }
+
+    return { 
+      addGoal,
+      invalidInput,
+      enteredText
+    };
+  },
+  /* data() {
     return {
       enteredText: "",
       invalidInput: false,
@@ -37,7 +65,7 @@ export default {
         console.log("Analytics: Invalid Input");
       }
     },
-  },
+  },*/
 };
 </script>
 
